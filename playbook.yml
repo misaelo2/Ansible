@@ -18,7 +18,7 @@
        mysql_user: name=wordpressuser password=password priv=wordpress.*:ALL state=present
 
      - name: enviar template bind9 
-       template: src=./bind/misael.gonzalonazareno.db.j2 dest=/var/cache/bind/
+       copy: src=./bind/misael.gonzalonazareno.db dest=/var/cache/bind/
 
      - name: enviar configuracion de bind
        copy: src=./bind/named.conf.local dest=/etc/bind/
@@ -38,6 +38,7 @@
         - nginx
         - php7.0
         - php7.0-fpm
+        - unzip
      - name:  descomprimir wordpress en el directorio de nuestro servidor web
        unarchive: src=./php/wordpress-4.9.2-es_ES.zip dest=/var/www/html
 
