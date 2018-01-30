@@ -1,0 +1,15 @@
+$TTL    604800
+@       IN      SOA     nodo1.misael.gonzalonazareno.org. root.localhost. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      nodo1.misael.gonzalonazareno.org.
+
+$ORIGIN misael.gonzalonazareno.org.
+nodo1	IN	A	{{ nodo1 }}
+nodo2	IN	A	{{ nodo2 }}
+wordpress	IN	CNAME	nodo2
+mysql		IN	CNAME	nodo1
