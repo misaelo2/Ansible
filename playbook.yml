@@ -10,21 +10,27 @@
          - python-mysqldb      
      - name: copiar la database de wordpress
        copy: src=./mysql/wordpress.sql dest=/tmp
-
+      
      - name: restaurar la database
        mysql_db: name=wordpress state=import target=/tmp/wordpress.sql
 
      - name: crear un usuario
-       mysql_user: name=wordpressuser password=password priv=wordpress.*:ALL state=present
-
+       mysql_user: name=wordpressuser password=password priv='wordpress.*:ALL' state=present
+     
      - name: enviar template bind9 
        copy: src=./bind/misael.gonzalonazareno.db dest=/var/cache/bind/
-
+     
      - name: enviar configuracion de bind
        copy: src=./bind/named.conf.local dest=/etc/bind/
-
+	
      - name: enviar configuracion mysql para habilitar escuchas remotas
        copy: src=./mysql/50-server.cnf dest=/etc/mysql/mariadb.conf.d/50-server.cnf
+
+     - name: reiniciar todos los servicios
+       service: name={{ item }} state=restarted
+       with_items:
+          - mariadb
+          - bind9
 
 
 
@@ -39,8 +45,17 @@
         - php7.0
         - php7.0-fpm
         - unzip
+        - php-mysql
      - name:  descomprimir wordpress en el directorio de nuestro servidor web
        unarchive: src=./php/wordpress-4.9.2-es_ES.zip dest=/var/www/html
 
      - name: enviar configuracion de nginx
        copy: src=./nginx/default dest=/etc/nginx/sites-available/
+
+     - name: reiniciar todos los servicios
+       service: name={{ item }} state=restarted
+       with_items:
+          - nginx
+          - php7.0-fpm
+
+
