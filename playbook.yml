@@ -15,16 +15,19 @@
        mysql_db: name=wordpress state=import target=/tmp/wordpress.sql
 
      - name: crear un usuario
-       mysql_user: name=wordpressuser password=password priv='wordpress.*:ALL' state=present
+       mysql_user: name=wordpressuser password=password priv=wordpress.*:ALL host=%
      
      - name: enviar template bind9 
-       copy: src=./bind/misael.gonzalonazareno.db dest=/var/cache/bind/
+       template: src=./bind/misael.gonzalonazareno.db.j2 dest=/var/cache/bind/
      
      - name: enviar configuracion de bind
        copy: src=./bind/named.conf.local dest=/etc/bind/
 
      - name: enviar configuracion mysql para habilitar escuchas remotas
        copy: src=./mysql/50-server.cnf dest=/etc/mysql/mariadb.conf.d/50-server.cnf
+
+     - name: establecer dns
+       copy: src=./bind/resolv.conf dest=/etc/resolv.conf
 
      - name: reiniciar todos los servicios
        service: name={{ item }} state=restarted
@@ -47,10 +50,15 @@
         - unzip
         - php-mysql
      - name:  descomprimir wordpress en el directorio de nuestro servidor web
-       unarchive: src=./php/wordpress-4.9.2-es_ES.zip dest=/var/www/html
+       unarchive: src=./php/wordpress-4.9.2-es_ES.zip dest=/var/www/html owner=www-data
 
      - name: enviar configuracion de nginx
        copy: src=./nginx/default dest=/etc/nginx/sites-available/
+
+
+     - name: establecer dns
+       copy: src=./bind/resolv.conf dest=/etc/resolv.conf
+
 
      - name: reiniciar todos los servicios
        service: name={{ item }} state=restarted

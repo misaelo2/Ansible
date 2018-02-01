@@ -1,4 +1,4 @@
 zone "misael.gonzalonazareno.org" {
   type master;
-  file "/var/cache/bind/misael.gonzalonazareno.db";
+  file "/var/cache/bind/misael.gonzalonazareno.db.j2";
 };
