@@ -22,7 +22,7 @@
      
      - name: enviar configuracion de bind
        copy: src=./bind/named.conf.local dest=/etc/bind/
-	
+
      - name: enviar configuracion mysql para habilitar escuchas remotas
        copy: src=./mysql/50-server.cnf dest=/etc/mysql/mariadb.conf.d/50-server.cnf
 
