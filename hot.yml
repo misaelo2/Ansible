@@ -1,0 +1,42 @@
+---
+heat_template_version: newton
+
+description: 2 equipos , 2 ip flotantes y asociar estas
+
+resources:
+    floating_ip1:
+      type: OS::Nova::FloatingIP
+      properties:
+        pool: public
+
+    floating_ip2:
+      type: OS::Nova::FloatingIP
+      properties:
+        pool: public
+
+    nodo1:
+      type: OS::Nova::Server
+      properties:
+        flavor: m1.mini
+        image: f67e34fb-108d-4418-9a49-4a2dbde5a8f1
+        networks:
+          - network: 70e37c83-3c3e-4a09-9052-5a1dbe1642ca
+    nodo2:
+      type: OS::Nova::Server
+      properties:
+        flavor: m1.mini
+        image: f67e34fb-108d-4418-9a49-4a2dbde5a8f1
+        networks:
+          - network: 70e37c83-3c3e-4a09-9052-5a1dbe1642ca
+
+    association1:
+      type: OS::Nova::FloatingIPAssociation
+      properties:
+        floating_ip: { get_resource: floating_ip1 }
+        server_id: { get_resource: nodo1 }
+
+    association2:
+      type: OS::Nova::FloatingIPAssociation
+      properties:
+        floating_ip: { get_resource: floating_ip2 }
+        server_id: { get_resource: nodo2 }
