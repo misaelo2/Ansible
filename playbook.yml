@@ -27,7 +27,7 @@
        copy: src=./mysql/50-server.cnf dest=/etc/mysql/mariadb.conf.d/50-server.cnf
 
      - name: establecer dns
-       copy: src=./bind/resolv.conf dest=/etc/resolv.conf
+       template: src=./bind/resolv.conf.j2 dest=/etc/resolv.conf
 
      - name: reiniciar todos los servicios
        service: name={{ item }} state=restarted
@@ -57,7 +57,7 @@
 
 
      - name: establecer dns
-       copy: src=./bind/resolv.conf dest=/etc/resolv.conf
+       template: src=./bind/resolv.conf.j2 dest=/etc/resolv.conf
 
 
      - name: reiniciar todos los servicios

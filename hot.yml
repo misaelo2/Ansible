@@ -1,42 +1,56 @@
----
 heat_template_version: newton
 
-description: 2 equipos , 2 ip flotantes y asociar estas
+description: >
+  HOT template to deploy two servers into an existing neutron tenant network and
+  assign floating IP addresses to each server so they are routable from the
+  public network.
 
 resources:
-    floating_ip1:
-      type: OS::Nova::FloatingIP
-      properties:
-        pool: public
+  nodo1:
+    type: OS::Nova::Server
+    properties:
+      name: nodo1
+      image: f67e34fb-108d-4418-9a49-4a2dbde5a8f1
+      flavor: m1.mini
+      key_name: cloud
+      networks:
+        - port: { get_resource: nodo1_port }
 
-    floating_ip2:
-      type: OS::Nova::FloatingIP
-      properties:
-        pool: public
+  nodo1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: 70e37c83-3c3e-4a09-9052-5a1dbe1642ca
+      fixed_ips:
+        - subnet_id: 7964e670-d8ba-42a0-97c9-4ff89ae6dba8
+      security_groups: [default]
 
-    nodo1:
-      type: OS::Nova::Server
-      properties:
-        flavor: m1.mini
-        image: f67e34fb-108d-4418-9a49-4a2dbde5a8f1
-        networks:
-          - network: 70e37c83-3c3e-4a09-9052-5a1dbe1642ca
-    nodo2:
-      type: OS::Nova::Server
-      properties:
-        flavor: m1.mini
-        image: f67e34fb-108d-4418-9a49-4a2dbde5a8f1
-        networks:
-          - network: 70e37c83-3c3e-4a09-9052-5a1dbe1642ca
+  nodo1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: 49812d85-8e7a-4c31-baa2-d427692f6568
+      port_id: { get_resource: nodo1_port }
 
-    association1:
-      type: OS::Nova::FloatingIPAssociation
-      properties:
-        floating_ip: { get_resource: floating_ip1 }
-        server_id: { get_resource: nodo1 }
+  nodo2:
+    type: OS::Nova::Server
+    properties:
+      name: nodo2
+      image: f67e34fb-108d-4418-9a49-4a2dbde5a8f1
+      flavor: m1.mini
+      key_name: cloud
+      networks:
+        - port: { get_resource: nodo2_port }
 
-    association2:
-      type: OS::Nova::FloatingIPAssociation
-      properties:
-        floating_ip: { get_resource: floating_ip2 }
-        server_id: { get_resource: nodo2 }
+  nodo2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: 70e37c83-3c3e-4a09-9052-5a1dbe1642ca
+      fixed_ips:
+        - subnet_id: 7964e670-d8ba-42a0-97c9-4ff89ae6dba8
+      security_groups: [default]
+
+  nodo2_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: 49812d85-8e7a-4c31-baa2-d427692f6568
+      port_id: { get_resource: nodo2_port }
+
