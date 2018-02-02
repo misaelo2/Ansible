@@ -7,9 +7,9 @@ This recipe will create a two simple debian intances listen to after execute the
 
 Steps 
 
-1.  launch the stack 
+1.  launch the stack in your Openstack project via "hot.yml"
 
-2. replace in hosts.ini the ips that appear for the floating ip thats nova assign to your machines 
+2. replace in "hosts.ini" the ip's that appear for the floating ip thats nova assign to your machines 
 
 3. Launch the ansible.yml playbook 
 
