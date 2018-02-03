@@ -7,7 +7,7 @@ This recipe will create a two simple debian intances listen to after execute the
 
 Steps 
 
-0.  Put your own Openstack-key in "hot.yml" key zone 
+0.  Put your own Openstack-key in "hot.yml" key zone and in ansible.cfg
 
 1.  launch the stack in your Openstack project via "hot.yml"  
 
